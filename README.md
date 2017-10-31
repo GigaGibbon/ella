@@ -12,6 +12,6 @@ file will be created by Ella after she runs the first time.
 data will be stored.
 * `ad_corpora` : This is a list of Ad copora. Each entry should have the
 following:
-** `name` : The name of the ad corpus (will be used to determine JSON name)
-** `source`: The path to a directory containing text files for this corpus.
-** `url` : A list of URLs to use for the links for this ad corpus.
+    * `name` : The name of the ad corpus (will be used to determine JSON name)
+    * `source`: The path to a directory containing text files for this corpus.
+    * `url` : A list of URLs to use for the links for this ad corpus.
