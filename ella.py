@@ -55,7 +55,7 @@ def load_corpus(json_file, fullpath):
     if os.path.isfile(json_file):
         try:
             with open(json_file, 'r') as f:
-                j = json.load(f)
+                j = f.read()
             model = markovify.Text.from_json(j)
         except:
             print("Error parsing json file: {0}".format(json_file))
