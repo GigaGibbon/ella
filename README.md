@@ -15,3 +15,4 @@ following:
     * `name` : The name of the ad corpus (will be used to determine JSON name)
     * `source`: The path to a directory containing text files for this corpus.
     * `url` : A list of URLs to use for the links for this ad corpus.
+    * 'weight' : The weight for this ad in the results

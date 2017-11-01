@@ -41,6 +41,7 @@ check_stanza("main_corpus_source", "The path to the main corpus directory")
 check_stanza("main_corpus_json", "The path to the main corpus JSON")
 check_stanza("ad_corpora_json_dir", "The path of the ad corpora JSON files")
 check_stanza("ad_corpora", "The collection of ad copora")
+check_stanza("outputs", "The output for the raw text")
 
 if bad_config:
     print("Error parsing config file!\n")
@@ -97,3 +98,8 @@ for k in config['ad_corpora']:
     n = k['name']
     jf = os.path.join(config['ad_corpora_json_dir'], '{0}.json'.format(n))
     save_corpus(jf, ad_corpora[n])
+
+# Make the stuff
+#----------------
+for outs in config['outputs']:
+    print(outs)
