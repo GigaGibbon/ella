@@ -61,7 +61,7 @@ def load_corpus(json_file, fullpath):
         try:
             with open(json_file, 'r') as f:
                 j = f.read()
-            model = markovify.Text.from_json(j)
+            model = POSifiedText.from_json(j)
         except:
             print("Error parsing json file: {0}".format(json_file))
             print("Trying to load corpus, and JSON file invalid!")
@@ -138,6 +138,5 @@ for outs in config['outputs']:
                     sent_count += 1
                     # FIXME Logic for links
                     sent = main_model.make_sentence()
-                    print(sent)
                     f.write(sent)
                 f.write('</p>\n\n')
