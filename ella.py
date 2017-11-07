@@ -7,6 +7,8 @@ import sys
 import os
 import argparse
 import json
+import errno
+import random
 
 nlp = spacy.load("en")
 
@@ -20,6 +22,8 @@ class POSifiedText(markovify.Text):
 
 parser = argparse.ArgumentParser()
 parser.add_argument("config", help="The JSON config file to load.")
+parser.add_argument("-r", "--refresh", help="Force a refresh of the corpora",
+        action="store_true")
 
 args = parser.parse_args()
 
@@ -53,7 +57,7 @@ if bad_config:
 
 def load_corpus(json_file, fullpath):
     model = None
-    if os.path.isfile(json_file):
+    if os.path.isfile(json_file) and not args.refresh:
         try:
             with open(json_file, 'r') as f:
                 j = f.read()
@@ -80,6 +84,13 @@ def save_corpus(json_file, model):
     with open(json_file, 'w') as f:
         f.write(j)
 
+def mkdir_p(path):
+    try:
+        os.makedirs(path)
+    except OSError as exc:
+        if exc.errno == errno.EEXIST and os.path.isdir(path):
+            pass
+
 # Load corpora
 #--------------
 main_model = load_corpus(config['main_corpus_json'],config['main_corpus_source'])
@@ -102,4 +113,31 @@ for k in config['link_corpora']:
 # Make the stuff
 #----------------
 for outs in config['outputs']:
-    print(outs)
+    print("Processing output: {0}".format(outs['name']))
+    mkdir_p(outs['out_dir'])
+    num_sent = random.randint(
+            outs['min_max']['sent_per_para'][0],
+            outs['min_max']['sent_per_para'][1])
+    num_para = random.randint(
+            outs['min_max']['para_per_page'][0],
+            outs['min_max']['para_per_page'][1])
+    num_page = random.randint(
+            outs['min_max']['pages'][0], outs['min_max']['pages'][1])
+    page_count = 0
+    while page_count < num_page:
+        page_count += 1
+        para_count = 0
+        page_filename = os.path.join(outs['out_dir'],
+                "page_{0}.html".format(page_count))
+        with open(page_filename, 'w') as f:
+            while para_count < num_para:
+                para_count += 1
+                f.write('<p>')
+                sent_count = 0
+                while sent_count < num_sent:
+                    sent_count += 1
+                    # FIXME Logic for links
+                    sent = main_model.make_sentence()
+                    print(sent)
+                    f.write(sent)
+                f.write('</p>\n\n')
