@@ -94,13 +94,17 @@ def mkdir_p(path):
 # Load corpora
 #--------------
 main_model = load_corpus(config['main_corpus_json'],config['main_corpus_source'])
+population = [ None ]
+weights = [ config['main_weight'] ]
 link_corpora = {}
 for k in config['link_corpora']:
     n = k['name']
     jf = os.path.join(config['link_corpora_json_dir'], '{0}.json'.format(n))
     fp = k['source']
     model = load_corpus(jf, fp)
-    link_corpora[n] = model
+    link_corpora[n] = { 'model' : model, 'url' : k['url'] }
+    population.append(n)
+    weights.append(k['weight'])
 
 # Save corpora
 #--------------
@@ -108,7 +112,7 @@ save_corpus(config['main_corpus_json'], main_model)
 for k in config['link_corpora']:
     n = k['name']
     jf = os.path.join(config['link_corpora_json_dir'], '{0}.json'.format(n))
-    save_corpus(jf, link_corpora[n])
+    save_corpus(jf, link_corpora[n]['model'])
 
 # Make the stuff
 #----------------
@@ -136,7 +140,12 @@ for outs in config['outputs']:
                 sent_count = 0
                 while sent_count < num_sent:
                     sent_count += 1
-                    # FIXME Logic for links
-                    sent = main_model.make_sentence()
-                    f.write(sent)
+                    choice = random.choices(population, weights)[0]
+                    if choice is None:
+                        sent = main_model.make_sentence()
+                        f.write('{0}. '.format(sent))
+                    else:
+                        sent = link_corpora[choice]['model'].make_sentence()
+                        link = random.choice(link_corpora[choice]['url'])
+                        f.write('<a href="{0}">{1}.</a> '.format(link, sent))
                 f.write('</p>\n\n')
