@@ -33,5 +33,5 @@ for (dirpath, _, filenames) in os.walk(source_dir):
                         para = para + s
                     else:
                         fo.write("{0}\n".format(para))
-                        para = ""
+                        para = u""
 
