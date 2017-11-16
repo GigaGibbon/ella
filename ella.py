@@ -143,9 +143,9 @@ for outs in config['outputs']:
                     choice = random.choices(population, weights)[0]
                     if choice is None:
                         sent = main_model.make_sentence()
-                        f.write('{0}. '.format(sent))
+                        f.write('{0} '.format(sent))
                     else:
                         sent = link_corpora[choice]['model'].make_sentence()
                         link = random.choice(link_corpora[choice]['url'])
-                        f.write('<a href="{0}">{1}.</a> '.format(link, sent))
+                        f.write('<a href="{0}">{1}</a> '.format(link, sent))
                 f.write('</p>\n\n')
