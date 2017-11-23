@@ -3,6 +3,9 @@
 import os
 import json
 import sys
+from peewee import Model, SqliteDatabase, CharField, DateTimeField, \
+    IntegerField
+from datetime import date
 
 if len(sys.argv) != 2:
     print("Usage:")
@@ -23,7 +26,8 @@ def check_stanza(key, description):
         bad_config = True
         stanzas_missing.append({'name':key, 'description':description})
 
-check_stanza("outputs", "The output for the ")
+check_stanza("outputs", "The output for the blog posts")
+check_stanza("sqlite_db", "The sqlite db file")
 
 if bad_config:
     print("Error parsing config file!\n")
@@ -33,4 +37,16 @@ if bad_config:
         print("\t{0}\n".format(st['description']))
     sys.exit(1)
 
+db = SqliteDatabase(config['sqlite_db'])
 
+class Blog(Model):
+    title = CharField()
+    post_id = IntegerField()
+    filename = CharField()
+    post_date = DateTimeField()
+
+    class Meta:
+        database = db
+
+db.connect()
+Blog.create_table(fail_silently=True)

@@ -6,6 +6,7 @@ Ella is a Markov chain microblogger.
 Configuration JSON file:
 ------------------------
 
+* `sqlite_db` : The file for the sqlite db for the blogger.
 * `main_corpus_source` : Path to a directory that contains text files which
 will serve as Ella's main corpus.
 * `main_corpus_json` : The file to use for the stored main corpus data. This
